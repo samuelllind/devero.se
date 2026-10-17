@@ -8,7 +8,7 @@ import { chromium } from 'playwright';
 
 const root = resolve(fileURLToPath(import.meta.url), '../..');
 // Pages the stores and Google link to; each must exist. Every other page is found and checked too.
-const required = ['/', '/404.html', '/fut27/', '/fut27/privacy/', '/contact/'];
+const required = ['/', '/404.html', '/fut27/', '/fut27/privacy/', '/fut27/terms/', '/contact/'];
 const found = globSync('**/*.html', { cwd: root, exclude: (f) => f.startsWith('node_modules') || f.startsWith('.') })
   .map((f) => '/' + f.replace(/(^|\/)index\.html$/, '$1'));
 const pages = [...new Set([...required, ...found])].sort();
