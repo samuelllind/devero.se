@@ -10,6 +10,8 @@ from urllib.parse import urlsplit
 
 # Devero is not a registered company, so "AB" must never follow the name.
 DEVERO_AB = re.compile(r'devero\s+ab\b', re.IGNORECASE)
+# What a stylesheet loads: url(...) and @import "...".
+CSS_URL = re.compile(r'''url\(\s*['"]?([^'")]+?)['"]?\s*\)|@import\s+['"]([^'"]+)['"]''')
 # Attributes that load a resource; an external one would be a third-party request.
 RESOURCE_ATTRS = {('script', 'src'), ('link', 'href'), ('img', 'src'), ('source', 'src'),
                   ('iframe', 'src'), ('video', 'src'), ('audio', 'src')}
@@ -54,12 +56,34 @@ def _resolve(root, page, url):
     return root / target.relative_to('/')
 
 
+def _site_files(root, pattern):
+    for file in sorted(root.rglob(pattern)):
+        if not any(part.startswith('.') or part == 'node_modules' for part in file.relative_to(root).parts):
+            yield file
+
+
+def _check_ref(root, file, url, is_resource, problems):
+    name = file.relative_to(root).as_posix()
+    if urlsplit(url).scheme or url.startswith('//'):
+        if is_resource:
+            problems.append(f'{name}: external resource {url}')
+        return
+    target = _resolve(root, file, url)
+    if target is None:
+        problems.append(f'{name}: link {url} needs a trailing slash or a file extension')
+    elif not target.is_file():
+        problems.append(f'{name}: broken link {url}')
+
+
 def check(root):
     root = Path(root)
     problems = []
-    for page in sorted(root.rglob('*.html')):
-        if any(part.startswith('.') or part == 'node_modules' for part in page.relative_to(root).parts):
-            continue
+    for sheet in _site_files(root, '*.css'):
+        for match in CSS_URL.finditer(sheet.read_text(encoding='utf-8')):
+            url = (match.group(1) or match.group(2)).strip()
+            if not url.startswith('data:'):
+                _check_ref(root, sheet, url, True, problems)
+    for page in _site_files(root, '*.html'):
         name = page.relative_to(root).as_posix()
         parser = _Page()
         parser.feed(page.read_text(encoding='utf-8'))
@@ -71,17 +95,8 @@ def check(root):
             problems.append(f'{name}: no viewport meta')
         if DEVERO_AB.search(' '.join(parser.text)):
             problems.append(f'{name}: says "Devero AB"; Devero is not a registered company')
-        for tag, url, is_resource in parser.refs:
-            scheme = urlsplit(url).scheme
-            if scheme or url.startswith('//'):
-                if is_resource:
-                    problems.append(f'{name}: external resource {url}')
-                continue
-            target = _resolve(root, page, url)
-            if target is None:
-                problems.append(f'{name}: link {url} needs a trailing slash or a file extension')
-            elif not target.is_file():
-                problems.append(f'{name}: broken link {url}')
+        for _tag, url, is_resource in parser.refs:
+            _check_ref(root, page, url, is_resource, problems)
     return problems
 
 

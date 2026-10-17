@@ -1,13 +1,17 @@
 // Opens every page at 320 px wide and fails when one scrolls sideways.
 // Usage: node tools/check_layout.mjs   (needs `npm ci` and `npx playwright install chromium`)
 import { createServer } from 'node:http';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, globSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const root = resolve(fileURLToPath(import.meta.url), '../..');
-const pages = ['/', '/404.html', '/fut27/', '/fut27/privacy/', '/contact/'];
+// Pages the stores and Google link to; each must exist. Every other page is found and checked too.
+const required = ['/', '/404.html', '/fut27/', '/fut27/privacy/', '/contact/'];
+const found = globSync('**/*.html', { cwd: root, exclude: (f) => f.startsWith('node_modules') || f.startsWith('.') })
+  .map((f) => '/' + f.replace(/(^|\/)index\.html$/, '$1'));
+const pages = [...new Set([...required, ...found])].sort();
 const width = 320;
 const types = {
   '.html': 'text/html; charset=utf-8',
@@ -40,7 +44,10 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width, height: 640 } });
 const problems = [];
 for (const path of pages) {
-  if (!existsSync(fileFor(path))) continue;
+  if (!existsSync(fileFor(path))) {
+    problems.push(`${path}: missing`);
+    continue;
+  }
   const response = await page.goto(base + path);
   if (!response.ok()) {
     problems.push(`${path}: HTTP ${response.status()}`);

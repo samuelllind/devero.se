@@ -80,6 +80,26 @@ class CheckSiteTest(unittest.TestCase):
         (self.root / 'assets/site.css').write_text('')
         self.assertEqual(check_site.check(self.root), [])
 
+    def css(self, path, text):
+        file = self.root / path
+        file.parent.mkdir(parents=True, exist_ok=True)
+        file.write_text(text, encoding='utf-8')
+
+    def test_css_url_must_resolve(self):
+        self.page('index.html')
+        self.css('assets/site.css', "@font-face { src: url('/assets/fonts/X.woff2') format('woff2'); }")
+        self.assertEqual(check_site.check(self.root), ['assets/site.css: broken link /assets/fonts/X.woff2'])
+        (self.root / 'assets/fonts').mkdir()
+        (self.root / 'assets/fonts/X.woff2').write_bytes(b'')
+        self.assertEqual(check_site.check(self.root), [])
+
+    def test_css_external_import_banned(self):
+        self.page('index.html')
+        self.css('assets/site.css', '@import url("https://fonts.googleapis.com/css2?family=X");')
+        problems = check_site.check(self.root)
+        self.assertEqual(len(problems), 1)
+        self.assertIn('external', problems[0])
+
 
 if __name__ == '__main__':
     unittest.main()
