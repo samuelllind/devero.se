@@ -1,0 +1,284 @@
+@font-face {
+  font-family: 'Barlow Condensed';
+  src: url('/assets/fonts/BarlowCondensed-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Barlow Condensed';
+  src: url('/assets/fonts/BarlowCondensed-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #111214;
+  --surface: #1a1b1e;
+  --text: #ecedee;
+  --muted: #a0a4ab;
+  --line: #2c2e33;
+  --link: #ecedee;
+  --fut-bg: #071a19;
+  --fut-surface: #0e2b29;
+  --fut-line: #1d4743;
+  --fut-muted: #8db0a7;
+  --fut-gold: #e8c766;
+  --fut-mint: #5cf2c0;
+  --gutter: 16px;
+  --width: 960px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow Condensed', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: var(--link);
+  text-underline-offset: 3px;
+}
+
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--fut-mint);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 0.5em;
+}
+
+h1 {
+  font-size: 2.6rem;
+  letter-spacing: 0.01em;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin-top: 1.6em;
+}
+
+p,
+ul {
+  margin: 0 0 1em;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Header and footer */
+
+.site-header,
+.site-footer,
+.page {
+  width: 100%;
+  max-width: var(--width);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.wordmark {
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 0.24em;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current='page'] {
+  color: var(--text);
+}
+
+.page {
+  flex: 1;
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding-top: 20px;
+  padding-bottom: 28px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.site-footer a {
+  color: var(--muted);
+}
+
+/* Home: app tiles */
+
+.intro {
+  max-width: 34em;
+  margin-bottom: 32px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.tile {
+  display: block;
+  min-height: 180px;
+  padding: 20px;
+  border-radius: 16px;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.tile h3 {
+  font-size: 1.5rem;
+  margin: 0 0 4px;
+}
+
+.tile p {
+  margin: 0;
+}
+
+.tile--fut27 {
+  background: var(--fut-bg);
+  border-color: var(--fut-line);
+}
+
+.tile--fut27:hover {
+  border-color: var(--fut-mint);
+}
+
+.tile--fut27 p {
+  color: var(--fut-muted);
+}
+
+.tile--soon {
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.app-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  background: var(--fut-gold);
+  color: var(--fut-bg);
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+
+/* App pages: FUT 27 accents */
+
+.fut27 .page h1,
+.fut27 .page h2 {
+  color: var(--text);
+}
+
+.fut27 .page h2::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  vertical-align: 0.15em;
+  background: var(--fut-mint);
+  clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+}
+
+.badge {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid var(--fut-line);
+  border-radius: 10px;
+  background: var(--fut-bg);
+  color: var(--fut-gold);
+  font-weight: 800;
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.faq details > :not(summary) {
+  margin-top: 10px;
+}
+
+.prose {
+  max-width: 40em;
+}
+
+.prose ul {
+  padding-left: 1.2em;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
