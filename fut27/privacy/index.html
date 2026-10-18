@@ -40,6 +40,11 @@
       <li><strong>Your purchases.</strong> If you buy coins: which bundle, the store and its transaction
         id, the store's country, and when the coins were added or taken back after a refund. We never see
         your card or other payment details.</li>
+      <li><strong>Notifications.</strong> When you open the app, we note when it was opened and your
+        phone's time zone, so that we send nothing on a day you have already played and the one daily
+        reminder arrives at about 18:00 your time. We also keep your notification settings and which
+        reminders you have already had. If you allow notifications, we store your phone's push token, the
+        address notifications are delivered to.</li>
       <li><strong>Technical logs.</strong> Our servers also keep logs of requests, which include your
         IP address, to keep the service running and secure.</li>
     </ul>
@@ -55,11 +60,18 @@
       own privacy policies. Purchases are checked for us by RevenueCat (RevenueCat, Inc., USA). It receives
       the store's receipt, your random account id and basic device details, but not your name or email,
       and acts on our behalf under a data processing agreement that also covers the transfer outside the EU.</p>
+    <p>Notifications are delivered through Firebase Cloud Messaging (Google). It receives your push token
+      and the reminder's text, and on an iPhone passes them on to Apple's push service. Google acts on our
+      behalf under its data processing terms, which also cover any transfer outside the EU. We use only
+      Firebase's messaging, not its analytics.</p>
 
     <h2>Why</h2>
     <p>We use your data only to run the game: to keep your club, let you get it back on a new phone,
       stop the same reward being paid twice, and add the coins you buy (or take them back after a refund). The legal basis is our agreement with you to provide
       the game you chose to play.</p>
+    <p>We send notifications only if you allow them: at most one a day, about rewards waiting for you, new
+      players, news or your daily bonus. The legal basis is your consent. You can withdraw it at any time
+      with the notification switches on the app's About screen or in your phone's settings.</p>
 
     <h2>What we don't do</h2>
     <ul>
@@ -71,7 +83,8 @@
     <h2>How long we keep it</h2>
     <p>As long as your account exists. When you delete your account, everything in it is deleted,
       purchase records included, at RevenueCat too. A guest account can't be signed back into once the app is uninstalled,
-      so its data stays on our server until you ask us to delete it. Technical logs are deleted
+      so its data stays on our server until you ask us to delete it. A push token is deleted when you sign
+      out or delete your account, or as soon as Firebase tells us it no longer works. Technical logs are deleted
       automatically within 30 days.</p>
 
     <h2>Your rights</h2>
