@@ -1,0 +1,12 @@
+{
+  "name": "devero-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "python3 tools/check_site.py && node tools/check_layout.mjs",
+    "test": "python3 -m unittest discover -s tools"
+  },
+  "devDependencies": {
+    "playwright": "1.48.2"
+  }
+}
